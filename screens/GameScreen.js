@@ -1,26 +1,104 @@
-import React from "react";
-import { View, Text, StyleSheet, TextInput, Button } from "react-native";
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Button,
+  TouchableWithoutFeedback,
+  Keyboard,
+  Alert,
+} from "react-native";
 import Card from "../component/Card";
+import ConfirmValueBox from "../component/ConfirmValueBox";
+import Input from "../component/Input";
 import colorTheme from "../constants/colorTheme";
 
-const GameScreen = () => {
-  return (
-    <View style={styles.rootGameScreenContainer}>
-      <Text>GameScreen</Text>
-      <Card style={styles.cardContainer}>
-        <View style={styles.cardStyle}>
-          <Text style={styles.cardTitle}>Select A Number</Text>
-          <TextInput
-            style={styles.cardTextInput}
-            placeholder="Enter A Number"
-          />
-          <View style={styles.buttonContainer}>
-            <Button color={colorTheme.mainThemeColor} title="cancel" />
-            <Button title="confirm" />
+const GameScreen = ({ onStartGame }) => {
+  const [inputBoxValue, setInputBoxValue] = useState("");
+  const [confirmValue, setConfirmValue] = useState(false);
+  const [selectedValue, setSelectedValue] = useState("");
+
+  let confirmOutput;
+
+  const handleInputBoxValue = (inputValue) => {
+    setInputBoxValue(inputValue.replace(/[^0-9]/g, ""));
+  };
+
+  const handleConfirmButton = () => {
+    let verifySelectedValue = parseInt(inputBoxValue);
+
+    if (
+      isNaN(verifySelectedValue) ||
+      verifySelectedValue > 99 ||
+      verifySelectedValue <= 0
+    ) {
+      Alert.alert("Invalid Number", "Number has been between 1 to 99 ", [
+        {
+          text: "okay",
+          style: "destructive",
+          onPress: () => setInputBoxValue(""),
+        },
+      ]);
+      Keyboard.dismiss();
+      return;
+    }
+    setSelectedValue(verifySelectedValue);
+    setConfirmValue(true);
+    setInputBoxValue("");
+    Keyboard.dismiss();
+  };
+
+  if (confirmValue) {
+    confirmOutput = (
+      <View style={styles.confirmBoxStyle}>
+        <ConfirmValueBox style={styles.rootConfirmBoxContainer}>
+          <Text style={styles.confirmBoxTextStyle}>You Selected</Text>
+          <ConfirmValueBox style={{ borderWidth: 3, borderRadius: 50 }}>
+            <Text>{selectedValue}</Text>
+          </ConfirmValueBox>
+          <View style={styles.confirmBoxSubmitStyle}>
+            <Button
+              title="Start Game"
+              onPress={() => {
+                onStartGame(selectedValue);
+              }}
+            />
           </View>
-        </View>
-      </Card>
-    </View>
+        </ConfirmValueBox>
+      </View>
+    );
+  }
+  return (
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <View style={styles.rootGameScreenContainer}>
+        <Text>GameScreen</Text>
+        <Card style={styles.cardContainer}>
+          <View style={styles.cardStyle}>
+            <Text style={styles.cardTitle}>Select A Number</Text>
+            <Input
+              style={styles.cardTextInput}
+              blurOnSubmit
+              autoCapitalize="none"
+              autoCorrect={false}
+              keyboardType="number-pad"
+              maxLength={2}
+              onChangeText={handleInputBoxValue}
+              value={inputBoxValue}
+            />
+            <View style={styles.buttonContainer}>
+              <Button
+                color={colorTheme.mainThemeColor}
+                title="cancel"
+                onPress={() => setInputBoxValue("")}
+              />
+              <Button title="confirm" onPress={() => handleConfirmButton()} />
+            </View>
+          </View>
+        </Card>
+        {/* {selectedValue ? confirmOutput : <Text></Text>} */}
+        {confirmOutput}
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -47,6 +125,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 10, height: 10 },
     shadowColor: "black",
     shadowOpacity: 1,
+    borderRadius: 30,
   },
   cardTitle: {
     fontSize: 15,
@@ -55,9 +134,32 @@ const styles = StyleSheet.create({
   },
   cardTextInput: {
     height: 40,
-    margin: 12,
-    borderWidth: 0.5,
-    padding: 10,
+    width: 30,
+    alignItems: "center",
+    justifyContent: "center",
+    textAlign: "center",
+    borderBottomColor: "grey",
+    borderBottomWidth: 1,
+  },
+  rootConfirmBoxContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "green",
+    elevation: 4,
+    alignItems: "center",
+    marginHorizontal: 60,
+    backgroundColor: "#fff",
+    width: "100%",
+    marginTop: 20,
+    borderRadius: 30,
+  },
+  confirmBoxStyle: {},
+  confirmBoxTextStyle: {
+    fontSize: 20,
+    marginVertical: 8,
+  },
+  confirmBoxSubmitStyle: {
+    marginVertical: 10,
   },
 });
 

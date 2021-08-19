@@ -1,15 +1,34 @@
 import React, { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import Card from "./component/Card";
+import * as Font from "expo-font";
+import AppLoading from "expo-app-loading";
 
 import Header from "./component/Header";
 import GameOverScreen from "./screens/GameOverScreen";
 import GamePlayScreen from "./screens/GamePlayScreen";
 import GameScreen from "./screens/GameScreen";
 
+const fetchFont = () => {
+  return Font.loadAsync({
+    "freedom-font": require("./assets/font/Freedom-10eM.ttf"),
+    "shortBaby-font": require("./assets/font/ShortBaby-Mg2w.ttf"),
+  });
+};
+
 export default function App() {
   const [userNumber, setUserNumber] = useState();
   const [guessRoundCounter, setGuessRoundCounter] = useState(0);
+  const [dataLoaded, setDataLoaded] = useState(false);
+
+  if (!dataLoaded) {
+    return (
+      <AppLoading
+        startAsync={fetchFont}
+        onFinish={() => setDataLoaded(true)}
+        onError={() => console.log(err)}
+      />
+    );
+  }
 
   const startGameHandler = (selectedNumber) => {
     setUserNumber(selectedNumber);

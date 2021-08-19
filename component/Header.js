@@ -1,11 +1,14 @@
 import React from "react";
 import { Text, View, StyleSheet } from "react-native";
 import colorTheme from "../constants/colorTheme";
+import { HeaderText } from "../constants/customFont";
 
 const Header = () => {
   return (
     <View style={styles.rootHeaderContainer}>
-      <Text style={styles.headerText}>Guess A Number</Text>
+      <HeaderText style={styles.headerText}>
+        <Text>Number Guessing App</Text>
+      </HeaderText>
     </View>
   );
 };
@@ -19,7 +22,7 @@ const styles = StyleSheet.create({
   },
   headerText: {
     padding: 15,
-    fontSize:20
+    fontSize: 25,
   },
 });
 

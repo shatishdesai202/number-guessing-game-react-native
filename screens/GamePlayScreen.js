@@ -4,23 +4,16 @@ import ButtonCard from "../component/ButtonCard";
 import NumberContainer from "../component/NumberContainer";
 
 const generateRandomNumber = (min, max, exclude) => {
-  let minValue = Math.ceil(min);
-  let maxValue = Math.floor(max);
-  let randomNumber =
-    Math.floor(Math.random() * (maxValue - minValue)) + minValue;
+  let randomNumber = Math.floor(Math.random() * (max - min)) + min;
 
   if (randomNumber === exclude) {
-    generateRandomNumber(minValue, maxValue, exclude);
+    generateRandomNumber(min, max, exclude);
   } else {
     return randomNumber;
   }
 };
 
-const GamePlayScreen = ({
-  selectedNumber,
-  guessRoundCounter,
-  setGuessRoundCounter,
-}) => {
+const GamePlayScreen = ({ selectedNumber, setGuessRoundCounter }) => {
   const [guessNumber, setGuessNumber] = useState(
     generateRandomNumber(1, 100, selectedNumber)
   );
@@ -30,7 +23,7 @@ const GamePlayScreen = ({
     if (guessNumber === selectedNumber) {
       setGuessRoundCounter(counter);
     }
-  });
+  }, [guessNumber, selectedNumber, setGuessRoundCounter]);
 
   const currentLow = useRef(1);
   const currentHigh = useRef(100);
@@ -51,7 +44,11 @@ const GamePlayScreen = ({
       currentLow.current = guessNumber;
     }
     setGuessNumber(
-      generateRandomNumber(currentLow.current, currentHigh.current, guessNumber)
+      generateRandomNumber(
+        currentLow.current + 1,
+        currentHigh.current - 1,
+        guessNumber
+      )
     );
     setCounter((counter) => counter + 1);
   };

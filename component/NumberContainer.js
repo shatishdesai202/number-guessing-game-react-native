@@ -30,8 +30,10 @@ const styles = StyleSheet.create({
     fontSize: 30,
   },
   containerHeaderText: {
+    marginTop: 30,
     fontSize: 20,
     color: "grey",
+    fontFamily: "shortBaby-font",
   },
 });
 

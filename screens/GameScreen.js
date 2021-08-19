@@ -12,6 +12,7 @@ import Card from "../component/Card";
 import ConfirmValueBox from "../component/ConfirmValueBox";
 import Input from "../component/Input";
 import colorTheme from "../constants/colorTheme";
+import { TitleText } from "../constants/customFont";
 
 const GameScreen = ({ onStartGame }) => {
   const [inputBoxValue, setInputBoxValue] = useState("");
@@ -71,10 +72,9 @@ const GameScreen = ({ onStartGame }) => {
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <View style={styles.rootGameScreenContainer}>
-        <Text>GameScreen</Text>
         <Card style={styles.cardContainer}>
           <View style={styles.cardStyle}>
-            <Text style={styles.cardTitle}>Select A Number</Text>
+            <TitleText style={styles.cardTitle}>Select A Number</TitleText>
             <Input
               style={styles.cardTextInput}
               blurOnSubmit
